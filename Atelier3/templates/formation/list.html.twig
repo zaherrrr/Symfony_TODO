@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des formations{% endblock %}
+
+{% block body %}
+    {% if formations is not null and formations|length > 0  %}
+    <h1>Liste des formations</h1>
+
+    <table aria-colspan="2">
+        <tr>
+            <th>
+                Reference
+            </th>
+            <th>
+                Titre
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Participations
+            </th>
+            <th>
+                Debut
+            </th>
+            <th>
+                Fin
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+        {% for formation in formations %}
+            <tr>
+                <th>
+                    {{ formation.ref }}
+                </th>
+                <th>
+                    {{ formation.Titre|upper }}
+                </th>
+                <th>
+                    {{ formation.Description }}
+                </th>
+                <th>
+                    {{ formation.nb_participants }}
+                </th>
+                <th>
+                    {{ formation.date_debut }}
+                </th>
+                <th>
+                    {{ formation.date_fin }}
+                </th>
+                <th>
+                    {% if formation.nb_participants > 0 %}
+                        -
+                    {% else %}
+                        <a style="cursor:pointer;color:red;text-decoration: none;" href="{{ path('app_formation_details',{'Titre':formation.Titre}) }}">Patriciper</a>
+                    {% endif %}
+                </th>
+            </tr>
+        {% endfor %}
+    </table>
+    <div>
+        <b>Nombre des formations : {{ formations|length }}</b>
+    </div>
+    <div>
+        <b>Les Formation théorique:
+            {% for formation in formations %}
+                {% if formation.Description is same as "formation theorique" %}
+                    {{ formation.Titre }}
+                {% endif %}
+            {% endfor %}
+        </b>
+    </div>
+    <div>
+        <b>La formation ayant le plus grand nombre de participants :
+            {% set maxVal = 0 %}
+            {% set total = 0 %}
+            {% for formation in formations %}
+                {% set total = (total + formation.nb_participants ) %}
+                {% set maxVal = max(formation.nb_participants, maxVal) %}
+            {% endfor %}
+            {% for formation in formations %}
+                {% if formation.nb_participants is same as maxVal %}
+                    {{ formation.Titre|upper }}
+                {% endif %}
+            {% endfor %}
+        </b>
+    </div>
+    <div>
+        <b>Le total des participants est {{ total }}</b>
+    </div>
+
+    {% else %}
+        <div><h1> Pas des fomartions ... </h1></div>
+    {% endif %}
+
+{% endblock %}
